@@ -18,17 +18,34 @@ public class LookToMove : MonoBehaviour {
 
 	CharacterController controller;
 
+	UnityStandardAssets.ImageEffects.BlurOptimized[] blurs;
+
+	public Vector3 mapCenter = Vector3.zero;
+	public float radius = 1000f;
+	public float blurIncrementAmount = 3f;
+	public float darkIncrementAmount = 5f;
+
+	public Renderer blackRenderer;
+
 #if DIRECTION_BASED
 
-
 	void Start () {
-		controller = GetComponent<CharacterController> ();
+		controller = GetComponent<CharacterController>();
 		moving = false;
-//		cam = GetComponentInChildren<Camera> ();
 		lookDir = cam.transform.eulerAngles;
+		blurs = GetComponentsInChildren<UnityStandardAssets.ImageEffects.BlurOptimized>();
 	}
 	
 	void Update () {
+		if(Vector3.Distance(transform.position, mapCenter) > radius) {
+			float blurAmount = ((Vector3.Distance(transform.position, mapCenter) - radius)/blurIncrementAmount);
+			for(int i = 0; i < blurs.Length; i++) {
+				blurs[i].blurIterations = (int)blurAmount;
+			}
+			Color blackColor =	blackRenderer.material.color;
+			blackColor.a = blurAmount / darkIncrementAmount;
+			blackRenderer.material.color = blackColor;
+		}
 
 		if(Vector3.Distance(lookDir, cam.transform.eulerAngles) > maxTurnDist) {
 			lookDir = cam.transform.eulerAngles;
@@ -46,6 +63,13 @@ public class LookToMove : MonoBehaviour {
 		if(moving) {
 			controller.SimpleMove(cam.transform.forward * speed);
 		}
+	}
+
+	void OnDrawGizmosSelected() {
+		Gizmos.color = Color.blue;
+		Gizmos.DrawCube(mapCenter, Vector3.one * 10f);
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(mapCenter, radius);
 	}
 #endif
 

@@ -3,6 +3,7 @@ Shader "Hidden/FastBlur" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_Bloom ("Bloom (RGB)", 2D) = "black" {}
+		_Gray ("Main Color", COLOR) = (0.1,0.1,0.1,0.1)
 	}
 	
 	CGINCLUDE
@@ -11,6 +12,7 @@ Shader "Hidden/FastBlur" {
 
 		sampler2D _MainTex;
 		sampler2D _Bloom;
+		float4 _Gray;
 				
 		uniform half4 _MainTex_TexelSize;
 		uniform half4 _Parameter;
@@ -43,7 +45,10 @@ Shader "Hidden/FastBlur" {
 			color += tex2D (_MainTex, i.uv21);
 			color += tex2D (_MainTex, i.uv22);
 			color += tex2D (_MainTex, i.uv23);
-			return color / 4;
+			
+			color = color / 4;
+			
+			return color;
 		}
 	
 		// weight curves
@@ -102,6 +107,7 @@ Shader "Hidden/FastBlur" {
 				color += tap * curve4[l];
 				coords += netFilterWidth;
   			}
+//  			color -= _Gray;
 			return color;
 		}
 
@@ -154,9 +160,10 @@ Shader "Hidden/FastBlur" {
 				half4 tapB = tex2D(_MainTex, i.offs[l].zw); 
 				color += (tapA + tapB) * curve4[l];
   			}
-
+			
+//			color = _Gray;// * _Bloom;
+			
 			return color;
-
 		}	
 					
 	ENDCG

@@ -20,7 +20,7 @@ namespace UnityStandardAssets.ImageEffects
         [Range(0.0f, 10.0f)]
         public float blurSize = 3.0f;
 
-        [Range(1, 4)]
+        [Range(0, 12)]
         public int blurIterations = 2;
 
         public BlurType blurType= BlurType.StandardGauss;
@@ -28,6 +28,7 @@ namespace UnityStandardAssets.ImageEffects
         public Shader blurShader = null;
         private Material blurMaterial = null;
 
+//		public Material gray;
 
         public override bool CheckResources () {
             CheckSupport (false);
@@ -83,6 +84,12 @@ namespace UnityStandardAssets.ImageEffects
                 Graphics.Blit (rt, rt2, blurMaterial, 2 + passOffs);
                 RenderTexture.ReleaseTemporary (rt);
                 rt = rt2;
+
+//				rt2 = RenderTexture.GetTemporary (rtW, rtH, 0, source.format);
+//				rt2.filterMode = FilterMode.Bilinear;
+//				Graphics.Blit (rt, rt2, gray);
+//				RenderTexture.ReleaseTemporary (rt);
+//				rt = rt2;
             }
 
             Graphics.Blit (rt, destination);
