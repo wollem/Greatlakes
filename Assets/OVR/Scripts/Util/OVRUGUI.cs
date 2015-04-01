@@ -282,7 +282,7 @@ public class OVRUGUI
         text.GetComponent<Text>().font = (Font)Resources.Load("DINPro-Bold");
         text.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
 
-        text.transform.parent = GO.transform;
+        text.transform.SetParent(GO.transform); 
         text.name = "TextBox";
 
         return GO;

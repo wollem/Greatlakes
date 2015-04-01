@@ -27,6 +27,10 @@ public class LookToMove : MonoBehaviour {
 
 	public Renderer blackRenderer;
 
+	public Transform forwardDirection, leftEyeAnchor, rightEyeAnchor;
+
+	public float turnBuffer = 5.0f;
+
 #if DIRECTION_BASED
 
 	void Start () {
@@ -34,9 +38,22 @@ public class LookToMove : MonoBehaviour {
 		moving = false;
 		lookDir = cam.transform.eulerAngles;
 		blurs = GetComponentsInChildren<UnityStandardAssets.ImageEffects.BlurOptimized>();
+
+//		forwardDirection = transform.FindChild("ForwardDirection");
+//		leftEyeAnchor = transform.FindChild("LeftEyeAnchor");
+//		rightEyeAnchor = transform.FindChild("RightEyeAnchor");
 	}
 	
 	void Update () {
+		if(Mathf.Abs(forwardDirection.eulerAngles.y - leftEyeAnchor.eulerAngles.y) > turnBuffer) {
+			float rotateAmount = forwardDirection.eulerAngles.y - leftEyeAnchor.eulerAngles.y;
+			if(Mathf.Sign(rotateAmount) > 0)
+				rotateAmount -= turnBuffer;
+			else
+				rotateAmount += turnBuffer;
+			transform.Rotate(0f, rotateAmount, 0f);
+		}
+
 		if(Vector3.Distance(transform.position, mapCenter) > radius) {
 			float blurAmount = ((Vector3.Distance(transform.position, mapCenter) - radius)/blurIncrementAmount);
 			for(int i = 0; i < blurs.Length; i++) {
