@@ -51,7 +51,7 @@ public class LookToMove : MonoBehaviour {
 				rotateAmount -= turnBuffer;
 			else
 				rotateAmount += turnBuffer;
-			transform.Rotate(0f, rotateAmount, 0f);
+			transform.Rotate(0f, -rotateAmount, 0f);
 		}
 
 		if(Vector3.Distance(transform.position, mapCenter) > radius) {
