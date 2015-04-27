@@ -10,6 +10,7 @@ public class LookToMove : MonoBehaviour {
 	public float moveTime = 2f;
 	public float maxTurnDist = 20f;
 	public float speed = 3f;
+	public float turnSpeed = 1f;
 	float timer = 0f;
 
 	public Transform cam;
@@ -45,13 +46,17 @@ public class LookToMove : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(Mathf.Abs(forwardDirection.eulerAngles.y - leftEyeAnchor.eulerAngles.y) > turnBuffer) {
-			float rotateAmount = forwardDirection.eulerAngles.y - leftEyeAnchor.eulerAngles.y;
-			if(Mathf.Sign(rotateAmount) > 0)
-				rotateAmount -= turnBuffer;
-			else
-				rotateAmount += turnBuffer;
-			transform.Rotate(0f, -rotateAmount, 0f);
+//		if(Mathf.Abs(forwardDirection.eulerAngles.y%360 - leftEyeAnchor.eulerAngles.y%360) > turnBuffer) {
+			float rotateAmount = (forwardDirection.eulerAngles.y) - (leftEyeAnchor.eulerAngles.y);
+//			print(rotateAmount);
+		float diff = Vector2.Angle (new Vector2 (forwardDirection.forward.x, forwardDirection.forward.z), new Vector2 (leftEyeAnchor.forward.x, leftEyeAnchor.forward.z));
+		if(diff>turnBuffer){
+			transform.rotation=Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(leftEyeAnchor.forward),Time.deltaTime*turnSpeed);
+//			if(Mathf.Sign(rotateAmount) > 0)
+//				rotateAmount -= turnBuffer;
+//			else
+//				rotateAmount += turnBuffer;
+//			transform.Rotate(0f, -rotateAmount, 0f);
 		}
 
 		if(Vector3.Distance(transform.position, mapCenter) > radius) {
