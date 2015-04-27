@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class LookToMove : MonoBehaviour {
 	bool moving = false;
@@ -31,6 +32,9 @@ public class LookToMove : MonoBehaviour {
 	public Transform forwardDirection, leftEyeAnchor, rightEyeAnchor;
 
 	public float turnBuffer = 5.0f;
+
+	public GameObject spriteStand, spriteWalk;
+	public RectTransform bar;
 
 #if DIRECTION_BASED
 
@@ -73,12 +77,19 @@ public class LookToMove : MonoBehaviour {
 			lookDir = cam.transform.eulerAngles;
 			timer = 0f;
 			moving = false;
+			bar.gameObject.SetActive(true);
+			spriteStand.SetActive(true);
+			spriteWalk.SetActive(false);
 		}
 
 		if(!moving) {
+			bar.sizeDelta = new Vector2((timer/moveTime)*10f, bar.rect.height);
 			timer += Time.deltaTime;
 			if(timer > moveTime) {
 				moving = true;
+				bar.gameObject.SetActive(false);
+				spriteStand.SetActive(false);
+				spriteWalk.SetActive(true);
 			}
 		}
 
