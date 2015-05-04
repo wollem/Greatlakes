@@ -6,12 +6,17 @@ public class PushBox : MonoBehaviour {
 	public Vector3 pushDirection;
 	public float strength;
 
+	[HideInInspector]
+	public bool active = true;
+
 	void OnTriggerStay(Collider other) {
+		if(!active)
+			return;
 		CharacterController cc = other.GetComponent<CharacterController>();
 		if(null != cc) {
 			float moddedStrength = strength / Vector3.Distance(other.transform.position, transform.position - pushDirection);
 			cc.Move(pushDirection*moddedStrength);
-			print (moddedStrength);
+//			print (moddedStrength);
 		}
 	}
 
